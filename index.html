@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Física — Termodinâmica: Gases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --surface2: #f0f2f5;
+  --border: #d8dde4;
+  --text: #1a1d23;
+  --text-muted: #5a6270;
+  --accent: #2563eb;
+  --accent2: #7c3aed;
+  --green: #16a34a;
+  --red: #dc2626;
+  --orange: #ca8a04;
+  --pink: #db2777;
+  --teal: #0d9488;
+  --gradient1: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  --gradient2: linear-gradient(135deg, #db2777 0%, #dc2626 100%);
+  --gradient3: linear-gradient(135deg, #16a34a 0%, #2563eb 100%);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(248, 249, 251, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+
+nav .nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 60px;
+  overflow-x: auto;
+}
+
+nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+nav a:hover, nav a.active {
+  color: var(--text);
+  background: var(--surface2);
+}
+
+nav .logo {
+  font-weight: 800;
+  font-size: 1rem;
+  background: var(--gradient1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-right: 1rem;
+}
+
+/* ─── Sections ─── */
+section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 100px 1.5rem 60px;
+}
+
+section:first-of-type { padding-top: 120px; }
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+h1 .gradient { background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+p, li { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+p strong, li strong { color: var(--text); }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.card.highlight {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(124,58,237,0.05) 100%);
+}
+
+.card.green-highlight {
+  border-color: var(--green);
+  background: linear-gradient(135deg, rgba(22,163,74,0.05) 0%, rgba(37,99,235,0.05) 100%);
+}
+
+.card.pink-highlight {
+  border-color: var(--pink);
+  background: linear-gradient(135deg, rgba(219,39,119,0.05) 0%, rgba(220,38,38,0.05) 100%);
+}
+
+/* ─── Formula Box ─── */
+.formula-box {
+  background: var(--surface2);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  color: var(--accent);
+  position: relative;
+  overflow: hidden;
+}
+
+.formula-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient1);
+}
+
+.formula-box .label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.formula-box .frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+.formula-box .frac .num { border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
+.formula-box .frac .den { padding-top: 4px; }
+
+/* ─── Transformation Cards ─── */
+.transform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.transform-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.transform-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+
+.transform-card.iso-t::before { background: var(--accent); }
+.transform-card.iso-v::before { background: var(--green); }
+.transform-card.iso-p::before { background: var(--pink); }
+
+.transform-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.transform-card.active {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(37,99,235,0.12);
+}
+
+.transform-card .tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 0.8rem;
+}
+
+.iso-t .tag { background: rgba(37,99,235,0.1); color: var(--accent); }
+.iso-v .tag { background: rgba(22,163,74,0.1); color: var(--green); }
+.iso-p .tag { background: rgba(219,39,119,0.1); color: var(--pink); }
+
+.transform-card h3 { margin-bottom: 0.5rem; }
+
+.transform-card .formula-mini {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  margin: 0.8rem 0;
+  padding: 0.6rem;
+  background: var(--surface2);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.iso-t .formula-mini { color: var(--accent); }
+.iso-v .formula-mini { color: var(--green); }
+.iso-p .formula-mini { color: var(--pink); }
+
+.transform-card .relation {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ─── Interactive Calculator ─── */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 640px) { .calc-grid { grid-template-columns: 1fr; } }
+
+.calc-side {
+  background: var(--surface2);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.calc-side h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.field input, .field select {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input:focus, .field select:focus {
+  border-color: var(--accent);
+}
+
+.field input::placeholder { color: var(--text-muted); opacity: 0.5; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--gradient1);
+  color: #fff;
+}
+
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-green {
+  background: var(--gradient3);
+  color: #fff;
+}
+
+.result-box {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(63,185,80,0.08);
+  border: 1px solid var(--green);
+  border-radius: var(--radius-sm);
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--green);
+  display: none;
+}
+
+.result-box.show { display: block; animation: fadeIn 0.3s ease; }
+
+/* ─── PxV Diagram ─── */
+.diagram-container {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+canvas {
+  width: 100%;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.diagram-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.diagram-controls .field { margin-bottom: 0; flex: 1; min-width: 120px; }
+
+/* ─── Quiz ─── */
+.quiz-question {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s;
+}
+
+.quiz-question.correct { border-color: var(--green); }
+.quiz-question.wrong { border-color: var(--red); }
+
+.quiz-question .q-num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.quiz-question .q-text {
+  font-size: 1.1rem;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+
+.options { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.option:hover { border-color: var(--border); background: var(--bg); }
+.option.selected { border-color: var(--accent); background: rgba(37,99,235,0.08); }
+.option.correct-answer { border-color: var(--green); background: rgba(22,163,74,0.08); }
+.option.wrong-answer { border-color: var(--red); background: rgba(220,38,38,0.08); }
+
+.option .bullet {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.option.selected .bullet { border-color: var(--accent); background: var(--accent); color: #fff; }
+.option.correct-answer .bullet { border-color: var(--green); background: var(--green); color: #fff; }
+.option.wrong-answer .bullet { border-color: var(--red); background: var(--red); color: #fff; }
+
+.quiz-feedback {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  display: none;
+  line-height: 1.5;
+}
+
+.quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+.quiz-feedback.correct { background: rgba(22,163,74,0.1); color: var(--green); }
+.quiz-feedback.wrong { background: rgba(220,38,38,0.1); color: var(--red); }
+
+.quiz-score {
+  text-align: center;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.quiz-score .big-num {
+  font-size: 4rem;
+  font-weight: 800;
+  background: var(--gradient1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Slider ─── */
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.slider-group label {
+  min-width: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.slider-group input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+
+.slider-group .val {
+  min-width: 70px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  text-align: right;
+  color: var(--accent);
+}
+
+/* ─── Animations ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.5s ease both; }
+
+/* ─── Tooltips ─── */
+.tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 8px 14px;
+  background: rgba(202,138,4,0.08);
+  border: 1px solid rgba(202,138,4,0.3);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--orange);
+  margin: 0.5rem 0;
+}
+
+/* ─── Cycle Animation ─── */
+.cycle-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cycle-legend .item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cycle-legend .dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+
+/* ─── Step by step ─── */
+.step-container {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+
+.step-container::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.step {
+  position: relative;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.4s ease both;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 6px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--surface);
+}
+
+.step .step-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.step .step-body {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* ─── Misc ─── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2rem 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+.badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+.badge-pink { background: rgba(247,120,186,0.15); color: var(--pink); }
+
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.kelvin-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 10px 18px;
+  background: rgba(220,38,38,0.06);
+  border: 1px solid rgba(220,38,38,0.25);
+  border-radius: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--red);
+  margin: 0.5rem 0;
+}
+
+.visual-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.gas-box {
+  width: 120px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  transition: all 0.5s ease;
+}
+
+.gas-box .state-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.gas-box .particles {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.arrow-between {
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.scroll-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 99;
+}
+
+.scroll-top.show { opacity: 1; }
+.scroll-top:hover { transform: scale(1.1); }
+
+footer {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-inner">
+    <span class="logo">PIVETE</span>
+    <a href="#intro">Início</a>
+    <a href="#formula">Fórmula</a>
+    <a href="#transformacoes">Transformações</a>
+    <a href="#simulador">Simulador</a>
+    <a href="#trabalho">Trabalho</a>
+    <a href="#ciclo">Ciclos</a>
+    <a href="#exercicios">Exercícios</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="intro">
+  <h1>Termodinâmica dos <span class="gradient">Gases Ideais</span></h1>
+  <p class="hero-sub">
+    Tudo que você precisa saber sobre <strong>pressão, volume e temperatura</strong> dos gases para mandar bem na prova de sexta-feira.
+  </p>
+
+  <div class="card highlight">
+    <h3>O que é o PIVETE?</h3>
+    <p><strong>PIVETE</strong> é o apelido da fórmula geral dos gases — porque ela usa <strong>P</strong> (pressão), <strong>V</strong> (volume) e <strong>T</strong> (temperatura).</p>
+    <p>Ela relaciona o estado <strong>inicial</strong> de um gás com o estado <strong>final</strong> depois de uma transformação.</p>
+  </div>
+
+  <div class="tip">⚠️ Temperatura SEMPRE em Kelvin na hora de calcular!</div>
+  <div class="kelvin-box">K = °C + 273</div>
+</section>
+
+<!-- ─── FORMULA ─── -->
+<section id="formula">
+  <h2><span class="num badge-blue">1</span> A Fórmula Geral (PIVETE)</h2>
+
+  <div class="formula-box">
+    <div class="label">Lei Geral dos Gases</div>
+    <span class="frac"><span class="num">P₁ · V₁</span><span class="den">T₁</span></span>
+    <span style="margin: 0 12px;">=</span>
+    <span class="frac"><span class="num">P₂ · V₂</span><span class="den">T₂</span></span>
+  </div>
+
+  <div class="card">
+    <h3>O que cada letra significa?</h3>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--border);">
+        <strong style="color: var(--accent);">P</strong> — Pressão (atm, Pa, mmHg... desde que os dois lados usem a mesma unidade)
+      </li>
+      <li style="padding: 8px 0; border-bottom: 1px solid var(--border);">
+        <strong style="color: var(--green);">V</strong> — Volume (L, m³, cm³... mesma unidade dos dois lados)
+      </li>
+      <li style="padding: 8px 0;">
+        <strong style="color: var(--pink);">T</strong> — Temperatura (<strong style="color: var(--red);">SEMPRE em Kelvin!</strong>)
+      </li>
+    </ul>
+    <div style="margin-top: 1rem;">
+      <p><strong>Índice 1</strong> = estado inicial &nbsp;|&nbsp; <strong>Índice 2</strong> = estado final</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TRANSFORMAÇÕES ─── -->
+<section id="transformacoes">
+  <h2><span class="num badge-green">2</span> Transformações Gasosas</h2>
+  <p>Quando <strong>uma grandeza permanece constante</strong>, a fórmula simplifica. Clique em cada uma para ver os detalhes:</p>
+
+  <div class="transform-grid">
+    <div class="transform-card iso-t" onclick="showTransform('iso-t')">
+      <span class="tag">T = constante</span>
+      <h3>Isotérmica</h3>
+      <div class="formula-mini">P₁·V₁ = P₂·V₂</div>
+      <p class="relation">P e V são <strong>inversamente</strong> proporcionais</p>
+    </div>
+    <div class="transform-card iso-v" onclick="showTransform('iso-v')">
+      <span class="tag">V = constante</span>
+      <h3>Isocórica (Isovolumétrica)</h3>
+      <div class="formula-mini">P₁/T₁ = P₂/T₂</div>
+      <p class="relation">P e T são <strong>diretamente</strong> proporcionais</p>
+    </div>
+    <div class="transform-card iso-p" onclick="showTransform('iso-p')">
+      <span class="tag">P = constante</span>
+      <h3>Isobárica</h3>
+      <div class="formula-mini">V₁/T₁ = V₂/T₂</div>
+      <p class="relation">V e T são <strong>diretamente</strong> proporcionais</p>
+    </div>
+  </div>
+
+  <div id="transform-detail" class="card" style="display:none;"></div>
+
+  <div class="card" style="margin-top: 1.5rem;">
+    <h3>Dica rápida — como lembrar?</h3>
+    <div class="step-container">
+      <div class="step">
+        <div class="step-title">Inversamente proporcional</div>
+        <div class="step-body">Uma sobe, a outra desce (como uma gangorra). Acontece na <strong>isotérmica</strong>: se a pressão dobra, o volume cai pela metade.</div>
+      </div>
+      <div class="step">
+        <div class="step-title">Diretamente proporcional</div>
+        <div class="step-body">As duas sobem juntas ou descem juntas. Acontece na <strong>isocórica</strong> (P e T) e na <strong>isobárica</strong> (V e T).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SIMULADOR INTERATIVO ─── -->
+<section id="simulador">
+  <h2><span class="num badge-pink">3</span> Simulador PIVETE</h2>
+  <p>Use a calculadora abaixo para resolver problemas. Preencha os valores que você conhece e deixe <strong>UM campo vazio</strong> — o simulador calcula para você!</p>
+
+  <div class="card">
+    <div style="margin-bottom: 1rem;">
+      <label style="font-weight: 600; margin-right: 1rem;">Tipo de transformação:</label>
+      <select id="calcType" onchange="updateCalcFields()" style="padding: 8px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Outfit'; font-size: 0.95rem;">
+        <option value="geral">Geral (PIVETE completo)</option>
+        <option value="isotermica">Isotérmica (T constante)</option>
+        <option value="isocorica">Isocórica (V constante)</option>
+        <option value="isobarica">Isobárica (P constante)</option>
+      </select>
+    </div>
+
+    <div class="calc-grid">
+      <div class="calc-side">
+        <h3>Estado Inicial (1)</h3>
+        <div class="field" id="f-p1">
+          <label>Pressão (P₁)</label>
+          <input type="number" id="p1" placeholder="ex: 2" step="any">
+        </div>
+        <div class="field" id="f-v1">
+          <label>Volume (V₁)</label>
+          <input type="number" id="v1" placeholder="ex: 5" step="any">
+        </div>
+        <div class="field" id="f-t1">
+          <label>Temperatura (T₁) em K</label>
+          <input type="number" id="t1" placeholder="ex: 300" step="any">
+        </div>
+      </div>
+      <div class="calc-side">
+        <h3>Estado Final (2)</h3>
+        <div class="field" id="f-p2">
+          <label>Pressão (P₂)</label>
+          <input type="number" id="p2" placeholder="?" step="any">
+        </div>
+        <div class="field" id="f-v2">
+          <label>Volume (V₂)</label>
+          <input type="number" id="v2" placeholder="?" step="any">
+        </div>
+        <div class="field" id="f-t2">
+          <label>Temperatura (T₂) em K</label>
+          <input type="number" id="t2" placeholder="?" step="any">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+      <button class="btn btn-primary" onclick="calcPivete()">Calcular</button>
+      <button class="btn" style="background:var(--surface2); color:var(--text);" onclick="clearCalc()">Limpar</button>
+    </div>
+
+    <div id="calcResult" class="result-box"></div>
+    <div id="calcSteps" style="margin-top:1rem; display:none;" class="card" style="background: var(--bg);"></div>
+  </div>
+
+  <div class="card" style="margin-top: 1rem;">
+    <h3>Conversor de Temperatura</h3>
+    <p>Lembre: a temperatura precisa estar em <strong>Kelvin</strong>!</p>
+    <div style="display:flex; gap:1rem; align-items:end; flex-wrap:wrap; margin-top:1rem;">
+      <div class="field" style="flex:1; min-width: 140px;">
+        <label>Celsius (°C)</label>
+        <input type="number" id="celsius" placeholder="ex: 27" oninput="convertTemp()">
+      </div>
+      <div style="font-size:1.5rem; color: var(--accent); padding-bottom: 0.8rem;">→</div>
+      <div class="field" style="flex:1; min-width: 140px;">
+        <label>Kelvin (K)</label>
+        <input type="number" id="kelvin" readonly style="color: var(--green); font-weight: 700;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TRABALHO ─── -->
+<section id="trabalho">
+  <h2><span class="num badge-blue">4</span> Trabalho de um Gás</h2>
+
+  <div class="card highlight">
+    <h3>O que é trabalho em termodinâmica?</h3>
+    <p>Quando um gás <strong>expande</strong> (o volume aumenta), ele "empurra" as paredes do recipiente — isso é <strong>trabalho positivo</strong>.</p>
+    <p>Quando o gás é <strong>comprimido</strong> (o volume diminui), o ambiente faz trabalho sobre o gás — <strong>trabalho negativo</strong>.</p>
+  </div>
+
+  <div class="formula-box" style="border-color: var(--green);">
+    <div class="label">Trabalho (transformação isobárica)</div>
+    <span style="color: var(--green);">τ = P · ΔV = P · (V₂ − V₁)</span>
+  </div>
+
+  <div class="card">
+    <h3>Regras importantes</h3>
+    <div class="step-container">
+      <div class="step">
+        <div class="step-title">ΔV > 0 (expansão) → τ > 0</div>
+        <div class="step-body">O gás se expande, faz trabalho sobre o meio. Trabalho <strong style="color:var(--green)">positivo</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-title">ΔV < 0 (compressão) → τ < 0</div>
+        <div class="step-body">O gás é comprimido, o meio faz trabalho sobre ele. Trabalho <strong style="color:var(--red)">negativo</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-title">ΔV = 0 (isocórica) → τ = 0</div>
+        <div class="step-body">Se o volume não muda, <strong>não há trabalho</strong>. As linhas verticais no gráfico PxV têm trabalho zero!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card green-highlight">
+    <h3>No gráfico P × V: Trabalho = Área</h3>
+    <p>O trabalho realizado pelo gás é numericamente igual à <strong>área sob a curva</strong> no diagrama P × V.</p>
+    <p>Em um <strong>ciclo fechado</strong>, o trabalho é a <strong>área interna</strong> do ciclo.</p>
+  </div>
+</section>
+
+<!-- ─── CICLO ─── -->
+<section id="ciclo">
+  <h2><span class="num badge-green">5</span> Ciclos Termodinâmicos</h2>
+
+  <div class="card">
+    <h3>Sentido do ciclo e sinal do trabalho</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+      <div style="padding: 1rem; background: rgba(22,163,74,0.08); border-radius: 10px; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">↻</div>
+        <div style="font-weight: 700; color: var(--green);">Horário</div>
+        <div style="font-size: 0.9rem; color: var(--text-muted);">τ > 0 (positivo)</div>
+      </div>
+      <div style="padding: 1rem; background: rgba(220,38,38,0.06); border-radius: 10px; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">↺</div>
+        <div style="font-weight: 700; color: var(--red);">Anti-horário</div>
+        <div style="font-size: 0.9rem; color: var(--text-muted);">τ < 0 (negativo)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Diagrama P × V Interativo</h3>
+    <p>Mude os pontos do ciclo e veja o trabalho sendo calculado em tempo real!</p>
+
+    <div class="diagram-controls">
+      <div class="field">
+        <label>P alta (N/m²)</label>
+        <input type="number" id="pHigh" value="500" oninput="drawCycle()">
+      </div>
+      <div class="field">
+        <label>P baixa (N/m²)</label>
+        <input type="number" id="pLow" value="200" oninput="drawCycle()">
+      </div>
+      <div class="field">
+        <label>V mín (m³)</label>
+        <input type="number" id="vMin" value="2" oninput="drawCycle()">
+      </div>
+      <div class="field">
+        <label>V máx (m³)</label>
+        <input type="number" id="vMax" value="5" oninput="drawCycle()">
+      </div>
+      <div class="field">
+        <label>Sentido</label>
+        <select id="cycleDir" onchange="drawCycle()" style="padding: 8px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Outfit'; font-size: 0.95rem; width: 100%;">
+          <option value="cw">Horário (+)</option>
+          <option value="ccw" selected>Anti-horário (−)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="diagram-container">
+      <canvas id="cycleCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div id="cycleResult" class="result-box show" style="display:block;"></div>
+
+    <div class="cycle-legend">
+      <div class="item"><div class="dot" style="background:var(--accent)"></div> Isobárica (P const)</div>
+      <div class="item"><div class="dot" style="background:var(--green)"></div> Isocórica (V const)</div>
+      <div class="item"><div class="dot" style="background:var(--pink)"></div> Área = |Trabalho|</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EXERCÍCIOS ─── -->
+<section id="exercicios">
+  <h2><span class="num badge-pink">6</span> Exercícios de Prática</h2>
+  <p>Teste seus conhecimentos! Clique na resposta que achar correta.</p>
+
+  <div id="quizContainer"></div>
+
+  <div id="quizScore" class="quiz-score" style="display:none;">
+    <div class="big-num" id="scoreNum"></div>
+    <p style="font-size: 1.1rem; font-weight: 600; color: var(--text);" id="scoreText"></p>
+    <button class="btn btn-primary" style="margin-top: 1rem;" onclick="resetQuiz()">Tentar novamente</button>
+  </div>
+</section>
+
+<footer>
+  Feito com carinho para a prova de sexta ✦ Física — Termodinâmica dos Gases
+</footer>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0})">↑</button>
+
+<script>
+// ─── Transform Details ───
+const transformDetails = {
+  'iso-t': {
+    title: 'Transformação Isotérmica',
+    color: 'var(--accent)',
+    content: `
+      <p><strong>Temperatura constante</strong> — a energia cinética das moléculas não muda.</p>
+      <p>A fórmula geral simplifica para:</p>
+      <div class="formula-box" style="border-color: var(--accent); font-size: 1.3rem;">
+        P₁ · V₁ = P₂ · V₂
+      </div>
+      <p><strong>Exemplo:</strong> Um gás tem P₁ = 4 atm e V₁ = 2 L. Se o volume passar para 8 L, qual a nova pressão?</p>
+      <div class="step-container">
+        <div class="step">
+          <div class="step-title">Montar a equação</div>
+          <div class="step-body">4 · 2 = P₂ · 8</div>
+        </div>
+        <div class="step">
+          <div class="step-title">Resolver</div>
+          <div class="step-body">8 = P₂ · 8 → P₂ = 1 atm</div>
+        </div>
+        <div class="step">
+          <div class="step-title">Interpretar</div>
+          <div class="step-body">O volume quadruplicou, então a pressão caiu a ¼. Faz sentido — são <strong>inversamente proporcionais</strong>!</div>
+        </div>
+      </div>
+    `
+  },
+  'iso-v': {
+    title: 'Transformação Isocórica (Isovolumétrica)',
+    color: 'var(--green)',
+    content: `
+      <p><strong>Volume constante</strong> — o gás está em um recipiente rígido que não muda de tamanho.</p>
+      <p>A fórmula simplifica para:</p>
+      <div class="formula-box" style="border-color: var(--green); font-size: 1.3rem; color: var(--green);">
+        P₁ / T₁ = P₂ / T₂
+      </div>
+      <p><strong>Exemplo:</strong> A temperatura de um gás aumenta 20% numa transformação isocórica. O que acontece com a pressão?</p>
+      <div class="step-container">
+        <div class="step">
+          <div class="step-title">Interpretar "20%"</div>
+          <div class="step-body">Aumentar 20% = multiplicar por 1,2 → T₂ = 1,2 · T₁</div>
+        </div>
+        <div class="step">
+          <div class="step-title">Substituir</div>
+          <div class="step-body">P₁ / T₁ = P₂ / (1,2 · T₁) → os T₁ cortam → P₂ = 1,2 · P₁</div>
+        </div>
+        <div class="step">
+          <div class="step-title">Conclusão</div>
+          <div class="step-body">A pressão <strong>também aumenta 20%</strong>. São diretamente proporcionais!</div>
+        </div>
+      </div>
+    `
+  },
+  'iso-p': {
+    title: 'Transformação Isobárica',
+    color: 'var(--pink)',
+    content: `
+      <p><strong>Pressão constante</strong> — como um gás dentro de um pistão livre que pode se mover.</p>
+      <p>A fórmula simplifica para:</p>
+      <div class="formula-box" style="border-color: var(--pink); font-size: 1.3rem; color: var(--pink);">
+        V₁ / T₁ = V₂ / T₂
+      </div>
+      <p><strong>Exemplo:</strong> Um gás a 300 K ocupa 6 L. Se aquecer até 600 K (mantendo a pressão), qual o volume?</p>
+      <div class="step-container">
+        <div class="step">
+          <div class="step-title">Montar a equação</div>
+          <div class="step-body">6 / 300 = V₂ / 600</div>
+        </div>
+        <div class="step">
+          <div class="step-title">Resolver</div>
+          <div class="step-body">V₂ = 6 · 600 / 300 = 12 L</div>
+        </div>
+        <div class="step">
+          <div class="step-title">Interpretar</div>
+          <div class="step-body">A temperatura dobrou, então o volume também dobrou. <strong>Diretamente proporcionais!</strong></div>
+        </div>
+      </div>
+    `
+  }
+};
+
+function showTransform(id) {
+  document.querySelectorAll('.transform-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.transform-card.${id}`).classList.add('active');
+  const detail = document.getElementById('transform-detail');
+  const data = transformDetails[id];
+  detail.style.display = 'block';
+  detail.style.borderColor = data.color;
+  detail.innerHTML = `<h3 style="color:${data.color}">${data.title}</h3>${data.content}`;
+  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ─── Calculator ───
+function updateCalcFields() {
+  const type = document.getElementById('calcType').value;
+  const show = (id, vis) => { document.getElementById(id).style.display = vis ? '' : 'none'; };
+
+  show('f-p1', true); show('f-p2', true);
+  show('f-v1', true); show('f-v2', true);
+  show('f-t1', true); show('f-t2', true);
+
+  if (type === 'isotermica') { show('f-t1', false); show('f-t2', false); }
+  if (type === 'isocorica') { show('f-v1', false); show('f-v2', false); }
+  if (type === 'isobarica') { show('f-p1', false); show('f-p2', false); }
+}
+
+function calcPivete() {
+  const type = document.getElementById('calcType').value;
+  const get = id => { const v = document.getElementById(id).value; return v === '' ? null : parseFloat(v); };
+
+  let p1 = get('p1'), v1 = get('v1'), t1 = get('t1');
+  let p2 = get('p2'), v2 = get('v2'), t2 = get('t2');
+
+  const result = document.getElementById('calcResult');
+  const steps = document.getElementById('calcSteps');
+  let answer = null;
+  let label = '';
+  let stepsHtml = '';
+
+  if (type === 'geral') {
+    const vals = [p1, v1, t1, p2, v2, t2];
+    const nullCount = vals.filter(v => v === null).length;
+    if (nullCount !== 1) {
+      result.className = 'result-box show';
+      result.style.borderColor = 'var(--red)';
+      result.style.color = 'var(--red)';
+      result.style.background = 'rgba(220,38,38,0.06)';
+      result.textContent = 'Preencha exatamente 5 dos 6 campos e deixe 1 vazio!';
+      return;
+    }
+    const lhs = (p1 !== null && v1 !== null && t1 !== null) ? (p1 * v1) / t1 : null;
+    const rhs = (p2 !== null && v2 !== null && t2 !== null) ? (p2 * v2) / t2 : null;
+
+    if (p1 === null) { answer = (rhs * t1) / v1; label = 'P₁'; document.getElementById('p1').value = answer.toFixed(4); stepsHtml = `P₁·V₁/T₁ = P₂·V₂/T₂ → P₁ = (P₂·V₂·T₁)/(T₂·V₁) = (${p2}·${v2}·${t1})/(${t2}·${v1})`; }
+    else if (v1 === null) { answer = (rhs * t1) / p1; label = 'V₁'; document.getElementById('v1').value = answer.toFixed(4); stepsHtml = `P₁·V₁/T₁ = P₂·V₂/T₂ → V₁ = (P₂·V₂·T₁)/(T₂·P₁) = (${p2}·${v2}·${t1})/(${t2}·${p1})`; }
+    else if (t1 === null) { answer = (p1 * v1) / rhs; label = 'T₁'; document.getElementById('t1').value = answer.toFixed(4); stepsHtml = `P₁·V₁/T₁ = P₂·V₂/T₂ → T₁ = (P₁·V₁·T₂)/(P₂·V₂) = (${p1}·${v1}·${t2})/(${p2}·${v2})`; }
+    else if (p2 === null) { answer = (lhs * t2) / v2; label = 'P₂'; document.getElementById('p2').value = answer.toFixed(4); stepsHtml = `P₁·V₁/T₁ = P₂·V₂/T₂ → P₂ = (P₁·V₁·T₂)/(T₁·V₂) = (${p1}·${v1}·${t2})/(${t1}·${v2})`; }
+    else if (v2 === null) { answer = (lhs * t2) / p2; label = 'V₂'; document.getElementById('v2').value = answer.toFixed(4); stepsHtml = `P₁·V₁/T₁ = P₂·V₂/T₂ → V₂ = (P₁·V₁·T₂)/(T₁·P₂) = (${p1}·${v1}·${t2})/(${t1}·${p2})`; }
+    else if (t2 === null) { answer = (p2 * v2) / lhs; label = 'T₂'; document.getElementById('t2').value = answer.toFixed(4); stepsHtml = `P₁·V₁/T₁ = P₂·V₂/T₂ → T₂ = (P₂·V₂·T₁)/(P₁·V₁) = (${p2}·${v2}·${t1})/(${p1}·${v1})`; }
+  } else if (type === 'isotermica') {
+    const vals = [p1, v1, p2, v2];
+    const nullCount = vals.filter(v => v === null).length;
+    if (nullCount !== 1) { showCalcError('Preencha 3 dos 4 campos!'); return; }
+    if (p1 === null) { answer = (p2 * v2) / v1; label = 'P₁'; document.getElementById('p1').value = answer.toFixed(4); }
+    else if (v1 === null) { answer = (p2 * v2) / p1; label = 'V₁'; document.getElementById('v1').value = answer.toFixed(4); }
+    else if (p2 === null) { answer = (p1 * v1) / v2; label = 'P₂'; document.getElementById('p2').value = answer.toFixed(4); }
+    else { answer = (p1 * v1) / p2; label = 'V₂'; document.getElementById('v2').value = answer.toFixed(4); }
+    stepsHtml = `P₁·V₁ = P₂·V₂ (T constante)`;
+  } else if (type === 'isocorica') {
+    const vals = [p1, t1, p2, t2];
+    const nullCount = vals.filter(v => v === null).length;
+    if (nullCount !== 1) { showCalcError('Preencha 3 dos 4 campos!'); return; }
+    if (p1 === null) { answer = (p2 * t1) / t2; label = 'P₁'; document.getElementById('p1').value = answer.toFixed(4); }
+    else if (t1 === null) { answer = (p1 * t2) / p2; label = 'T₁'; document.getElementById('t1').value = answer.toFixed(4); }
+    else if (p2 === null) { answer = (p1 * t2) / t1; label = 'P₂'; document.getElementById('p2').value = answer.toFixed(4); }
+    else { answer = (p2 * t1) / p1; label = 'T₂'; document.getElementById('t2').value = answer.toFixed(4); }
+    stepsHtml = `P₁/T₁ = P₂/T₂ (V constante)`;
+  } else if (type === 'isobarica') {
+    const vals = [v1, t1, v2, t2];
+    const nullCount = vals.filter(v => v === null).length;
+    if (nullCount !== 1) { showCalcError('Preencha 3 dos 4 campos!'); return; }
+    if (v1 === null) { answer = (v2 * t1) / t2; label = 'V₁'; document.getElementById('v1').value = answer.toFixed(4); }
+    else if (t1 === null) { answer = (v1 * t2) / v2; label = 'T₁'; document.getElementById('t1').value = answer.toFixed(4); }
+    else if (v2 === null) { answer = (v1 * t2) / t1; label = 'V₂'; document.getElementById('v2').value = answer.toFixed(4); }
+    else { answer = (v2 * t1) / v1; label = 'T₂'; document.getElementById('t2').value = answer.toFixed(4); }
+    stepsHtml = `V₁/T₁ = V₂/T₂ (P constante)`;
+  }
+
+  if (answer !== null) {
+    result.className = 'result-box show';
+    result.style.borderColor = 'var(--green)';
+    result.style.color = 'var(--green)';
+      result.style.background = 'rgba(22,163,74,0.06)';
+    const cleanAns = parseFloat(answer.toFixed(6));
+    result.innerHTML = `${label} = <strong>${cleanAns}</strong>`;
+    if (stepsHtml) {
+      result.innerHTML += `<br><span style="font-size:0.85rem; color: var(--text-muted); font-family: 'Outfit';">${stepsHtml}</span>`;
+    }
+  }
+}
+
+function showCalcError(msg) {
+  const result = document.getElementById('calcResult');
+  result.className = 'result-box show';
+  result.style.borderColor = 'var(--red)';
+  result.style.color = 'var(--red)';
+  result.style.background = 'rgba(220,38,38,0.06)';
+  result.textContent = msg;
+}
+
+function clearCalc() {
+  ['p1','v1','t1','p2','v2','t2'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('calcResult').className = 'result-box';
+}
+
+function convertTemp() {
+  const c = parseFloat(document.getElementById('celsius').value);
+  if (!isNaN(c)) {
+    document.getElementById('kelvin').value = (c + 273).toFixed(1);
+  } else {
+    document.getElementById('kelvin').value = '';
+  }
+}
+
+// ─── PxV Cycle Diagram ───
+function drawCycle() {
+  const canvas = document.getElementById('cycleCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width = 800 * dpr;
+  canvas.height = 500 * dpr;
+  canvas.style.width = '800px';
+  canvas.style.height = '500px';
+  ctx.scale(dpr, dpr);
+
+  const W = 800, H = 500;
+  const margin = { top: 40, right: 40, bottom: 60, left: 80 };
+  const gw = W - margin.left - margin.right;
+  const gh = H - margin.top - margin.bottom;
+
+  const pH = parseFloat(document.getElementById('pHigh').value) || 500;
+  const pL = parseFloat(document.getElementById('pLow').value) || 200;
+  const vMn = parseFloat(document.getElementById('vMin').value) || 2;
+  const vMx = parseFloat(document.getElementById('vMax').value) || 5;
+  const dir = document.getElementById('cycleDir').value;
+
+  const pMin = Math.min(pL, pH);
+  const pMax = Math.max(pL, pH);
+  const vMin = Math.min(vMn, vMx);
+  const vMax = Math.max(vMn, vMx);
+
+  const pRange = pMax * 1.3;
+  const vRange = vMax * 1.4;
+
+  const toX = v => margin.left + (v / vRange) * gw;
+  const toY = p => margin.top + gh - (p / pRange) * gh;
+
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = '#e5e7eb';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 6; i++) {
+    const y = margin.top + (gh / 6) * i;
+    ctx.beginPath(); ctx.moveTo(margin.left, y); ctx.lineTo(W - margin.right, y); ctx.stroke();
+    const x = margin.left + (gw / 6) * i;
+    ctx.beginPath(); ctx.moveTo(x, margin.top); ctx.lineTo(x, H - margin.bottom); ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#9ca3af';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, H - margin.bottom);
+  ctx.lineTo(W - margin.right, H - margin.bottom);
+  ctx.stroke();
+
+  ctx.fillStyle = '#5a6270';
+  ctx.font = '14px Outfit';
+  ctx.textAlign = 'center';
+  ctx.fillText('Volume (m³)', W / 2, H - 15);
+  ctx.save();
+  ctx.translate(20, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Pressão (N/m²)', 0, 0);
+  ctx.restore();
+
+  for (let v = 1; v <= vRange; v++) {
+    const x = toX(v);
+    if (x > margin.left && x < W - margin.right) {
+      ctx.fillStyle = '#5a6270';
+      ctx.font = '12px Space Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(v, x, H - margin.bottom + 20);
+    }
+  }
+  for (let p = 100; p <= pRange; p += 100) {
+    const y = toY(p);
+    if (y > margin.top && y < H - margin.bottom) {
+      ctx.fillStyle = '#5a6270';
+      ctx.font = '12px Space Mono';
+      ctx.textAlign = 'right';
+      ctx.fillText(p, margin.left - 10, y + 4);
+    }
+  }
+
+  const A = { p: pMax, v: vMin };
+  const B = { p: pMin, v: vMax };
+  const C = { p: pMax, v: vMax };
+  const D = { p: pMin, v: vMin };
+
+  let points;
+  if (dir === 'ccw') {
+    points = [A, D, B, C];
+  } else {
+    points = [A, C, B, D];
+  }
+
+  ctx.fillStyle = 'rgba(219, 39, 119, 0.1)';
+  ctx.beginPath();
+  ctx.moveTo(toX(points[0].v), toY(points[0].p));
+  for (let i = 1; i < points.length; i++) {
+    ctx.lineTo(toX(points[i].v), toY(points[i].p));
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  function drawArrowLine(from, to, color) {
+    const x1 = toX(from.v), y1 = toY(from.p);
+    const x2 = toX(to.v), y2 = toY(to.p);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const arrowLen = 12;
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(mx + arrowLen * Math.cos(angle), my + arrowLen * Math.sin(angle));
+    ctx.lineTo(mx + arrowLen * Math.cos(angle + 2.5), my + arrowLen * Math.sin(angle + 2.5));
+    ctx.lineTo(mx + arrowLen * Math.cos(angle - 2.5), my + arrowLen * Math.sin(angle - 2.5));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  for (let i = 0; i < points.length; i++) {
+    const from = points[i];
+    const to = points[(i + 1) % points.length];
+    const isVertical = Math.abs(from.v - to.v) < 0.01;
+    const color = isVertical ? '#16a34a' : '#2563eb';
+    drawArrowLine(from, to, color);
+  }
+
+  const labels = ['A', 'B', 'C', 'D'];
+  const allPts = [A, B, C, D];
+  allPts.forEach((pt, i) => {
+    const x = toX(pt.v), y = toY(pt.p);
+    ctx.fillStyle = '#7c3aed';
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1a1d23';
+    ctx.font = 'bold 14px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText(labels[i], x + (pt.v === vMin ? -16 : 16), y + (pt.p === pMax ? -12 : 16));
+    ctx.fillStyle = '#5a6270';
+    ctx.font = '11px Space Mono';
+    ctx.fillText(`(${pt.p}, ${pt.v})`, x + (pt.v === vMin ? -30 : 30), y + (pt.p === pMax ? -26 : 30));
+  });
+
+  const area = Math.abs((pMax - pMin) * (vMax - vMin));
+  const sign = dir === 'cw' ? '+' : '−';
+  const work = dir === 'cw' ? area : -area;
+
+  const resultEl = document.getElementById('cycleResult');
+  resultEl.innerHTML = `
+    <strong>Trabalho do ciclo:</strong> τ = ${sign}${area} J<br>
+    <span style="font-size: 0.9rem; font-family: Outfit; color: var(--text-muted);">
+      Área = base × altura = (${vMax} − ${vMin}) × (${pMax} − ${pMin}) = ${(vMax-vMin).toFixed(1)} × ${(pMax-pMin).toFixed(1)} = ${area}
+      <br>Sentido ${dir === 'cw' ? 'horário → τ > 0' : 'anti-horário → τ < 0'} → <strong>τ = ${work} J</strong>
+    </span>
+  `;
+}
+
+// ─── Quiz ───
+const quizData = [
+  {
+    q: 'Um gás sofre uma transformação onde a temperatura permanece constante. Que tipo de transformação é essa?',
+    options: ['Isobárica', 'Isotérmica', 'Isocórica', 'Adiabática'],
+    correct: 1,
+    explanation: 'Quando a temperatura é constante, a transformação é <strong>isotérmica</strong> (iso = igual, térmica = temperatura).'
+  },
+  {
+    q: 'Na transformação isotérmica, pressão e volume são:',
+    options: ['Diretamente proporcionais', 'Inversamente proporcionais', 'Iguais', 'Independentes'],
+    correct: 1,
+    explanation: 'Na isotérmica, P₁·V₁ = P₂·V₂. Se um aumenta, o outro diminui na mesma proporção — são <strong>inversamente proporcionais</strong>.'
+  },
+  {
+    q: 'Qual a temperatura em Kelvin de 27°C?',
+    options: ['246 K', '273 K', '300 K', '327 K'],
+    correct: 2,
+    explanation: 'K = °C + 273 = 27 + 273 = <strong>300 K</strong>.'
+  },
+  {
+    q: 'Um gás tem seu volume triplicado e sua temperatura dobrada. O que acontece com a pressão?',
+    options: ['Triplica', 'Dobra', 'Vira ⅔ da original', 'Cai pela metade'],
+    correct: 2,
+    explanation: 'P₁V₁/T₁ = P₂V₂/T₂ → P₁·V/T = P₂·3V/2T → P₂ = 2P₁/3 → a pressão vira <strong>⅔ da original</strong>.'
+  },
+  {
+    q: 'Numa transformação isocórica, se a temperatura aumenta 20%, a pressão:',
+    options: ['Diminui 20%', 'Aumenta 20%', 'Não muda', 'Dobra'],
+    correct: 1,
+    explanation: 'Na isocórica (V constante), P e T são diretamente proporcionais. Se T sobe 20%, P também <strong>sobe 20%</strong>.'
+  },
+  {
+    q: 'No diagrama P × V, o que representa a área interna de um ciclo?',
+    options: ['A temperatura', 'A pressão média', 'O trabalho realizado', 'A variação de volume'],
+    correct: 2,
+    explanation: 'No diagrama P × V, a área dentro do ciclo é numericamente igual ao <strong>trabalho</strong> realizado pelo gás.'
+  },
+  {
+    q: 'Um ciclo no diagrama P × V é percorrido no sentido anti-horário. O trabalho é:',
+    options: ['Positivo', 'Negativo', 'Zero', 'Depende da pressão'],
+    correct: 1,
+    explanation: 'Sentido anti-horário → trabalho <strong>negativo</strong>. Sentido horário → trabalho positivo.'
+  },
+  {
+    q: 'Se o volume de um gás não muda (ΔV = 0), o trabalho é:',
+    options: ['Máximo', 'Positivo', 'Negativo', 'Zero'],
+    correct: 3,
+    explanation: 'τ = P · ΔV. Se ΔV = 0, então τ = 0. Sem variação de volume, <strong>não há trabalho</strong>!'
+  },
+  {
+    q: 'Um gás a 2 atm ocupa 10 L. Se for comprimido isotermicamente até 5 L, a nova pressão será:',
+    options: ['1 atm', '2 atm', '4 atm', '20 atm'],
+    correct: 2,
+    explanation: 'P₁·V₁ = P₂·V₂ → 2·10 = P₂·5 → P₂ = 20/5 = <strong>4 atm</strong>.'
+  },
+  {
+    q: 'No ciclo com pontos A(500, 2), B(200, 5), C(500, 5), D(200, 2) em sentido anti-horário, qual o trabalho?',
+    options: ['900 J', '−900 J', '1500 J', '−1500 J'],
+    correct: 1,
+    explanation: 'Área = (5−2)·(500−200) = 3·300 = 900. Anti-horário → negativo → <strong>τ = −900 J</strong>.'
+  }
+];
+
+let quizAnswered = 0;
+let quizCorrect = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = quizData.map((q, i) => `
+    <div class="quiz-question" id="qq-${i}">
+      <div class="q-num">Questão ${i + 1} de ${quizData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.options.map((opt, j) => `
+          <div class="option" onclick="answerQuiz(${i}, ${j})" id="opt-${i}-${j}">
+            <span class="bullet">${String.fromCharCode(65 + j)}</span>
+            <span>${opt}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb-${i}"></div>
+    </div>
+  `).join('');
+}
+
+function answerQuiz(qIdx, optIdx) {
+  const qq = document.getElementById(`qq-${qIdx}`);
+  if (qq.classList.contains('correct') || qq.classList.contains('wrong')) return;
+
+  const q = quizData[qIdx];
+  const isCorrect = optIdx === q.correct;
+
+  document.querySelectorAll(`#qq-${qIdx} .option`).forEach((el, j) => {
+    if (j === q.correct) el.classList.add('correct-answer');
+    else if (j === optIdx && !isCorrect) el.classList.add('wrong-answer');
+  });
+
+  const fb = document.getElementById(`fb-${qIdx}`);
+  fb.className = `quiz-feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+  fb.innerHTML = isCorrect
+    ? `✓ Correto! ${q.explanation}`
+    : `✗ Errado! ${q.explanation}`;
+
+  qq.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  quizAnswered++;
+  if (isCorrect) quizCorrect++;
+
+  if (quizAnswered === quizData.length) {
+    setTimeout(showScore, 600);
+  }
+}
+
+function showScore() {
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.style.display = 'block';
+  document.getElementById('scoreNum').textContent = `${quizCorrect}/${quizData.length}`;
+  const pct = (quizCorrect / quizData.length) * 100;
+  let msg = '';
+  if (pct === 100) msg = 'Perfeito! Você está pronta para a prova! 🎉';
+  else if (pct >= 70) msg = 'Muito bem! Revise os erros e vai mandar bem!';
+  else if (pct >= 50) msg = 'Bom começo! Releia as explicações acima e tente de novo.';
+  else msg = 'Vamos estudar mais um pouco? Releia o conteúdo com calma e tente novamente!';
+  document.getElementById('scoreText').textContent = msg;
+  scoreEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  quizAnswered = 0;
+  quizCorrect = 0;
+  document.getElementById('quizScore').style.display = 'none';
+  renderQuiz();
+  document.getElementById('quizContainer').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── Scroll spy / scroll-to-top ───
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTopBtn');
+  btn.classList.toggle('show', window.scrollY > 400);
+
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav a');
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 200) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+  });
+});
+
+// ─── Init ───
+window.addEventListener('DOMContentLoaded', () => {
+  renderQuiz();
+  drawCycle();
+  updateCalcFields();
+});
+
+window.addEventListener('resize', drawCycle);
+</script>
+</body>
+</html>
